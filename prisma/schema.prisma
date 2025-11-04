@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -15,15 +8,34 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  firstName String
-  lastName String
-  emailAddress String @unique
-  userName String @unique
-  password String
-  isDeleted Boolean @default(false)
-  datejoined DateTime @default(now())
-  lastUpdated DateTime @updatedAt
+  id           String   @id @default(uuid()) @map("UserId")
+  firstName    String   @map("FirstName")
+  lastName     String   @map("LastName")
+  emailAddress String   @unique @map("EmailAddress")
+  userName     String   @unique @map("Username")
+  password     String   @map("Password")
+  isDeleted    Boolean  @default(false) @map("IsDeleted")
+  dateJoined   DateTime @default(now()) @map("DateJoined")
+  lastUpdated  DateTime @updatedAt @map("LastUpdated")
 
-@@map("UserTable")
+  blog Blog[]
+
+  @@map("UserTable")
+}
+
+model Blog {
+  id               String   @id @default(uuid()) @map("BlogID")
+  blogTitle        String   @map("BlogTitle")
+  blogSynopsis     String   @map("BlogSynopsis")
+  featuredImageUrl String?  @default("") @map("FeaturedImageUrl")
+  blogContent      String   @map("BlogContent")
+  isDeleted        Boolean  @default(false) @map("IsDeleted")
+  createdAt        DateTime @default(now()) @map("CreatedAt")
+  lastUpdated      DateTime @updatedAt @map("LastUpdated")
+
+  //one to many relationships
+  userId String @map("UserId")
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("Blogs")
 }
