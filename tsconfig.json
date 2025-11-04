@@ -40,7 +40,7 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-    "allowImportingTsExtensions":true,//added to allow import and export of ts files
+    "allowImportingTsExtensions": true, //added to allow import and export of ts files
     "noEmit": true
   }
 }
