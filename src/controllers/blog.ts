@@ -27,12 +27,24 @@ export const createTask = async (req: Request, res: Response) => {
 ///2.GETTING ALL BLOGS
 export const getAllBlogs = async (req: Request, res: Response) => {
   try {
-    const userId = req.user.id;
+    // const userId = req.user.id;
 
-    // res.send("Getting all blogs")
     const blogs = await client.blog.findMany({
-      where: {
-        AND: [{ userId: userId }, { isDeleted: false }],
+      where: { isDeleted: false },
+      select: {
+        //using select to select which fields we want to use
+        id: true, ///by adding true we are telling prisma to include the field in the results i.e the id field
+        blogTitle: true,
+        blogSynopsis: true,
+        featuredImageUrl: true,
+        createdAt: true,
+        user: {
+          select: {
+            ///this is a nested select
+            firstName: true,
+            lastName: true,
+          },
+        },
       },
     });
     res.status(200).json(blogs);
@@ -67,7 +79,11 @@ export const getBlogById = async (req: Request, res: Response) => {
 
 export const updateBlog = async (req: Request, res: Response) => {
   try {
+    // this is known as object destructuring(js feature that allows u to pull out properties from an object easily).This helps write cleaner and shorter codes especially where there are multiple parameters i.e if the route two parameters : const {userId, blogId} = req.params; would extract both at once instead of writing : const user = req.params.userId; const blogId = req.params.blogId;
+
+    //one can also write it as const id = req.params.id; ---- both extract the value of id from the req.params object and store it in a variable called id
     const { id } = req.params;
+
     const { blogTitle, blogSynopsis, featuredImageUrl, blogContent } = req.body;
 
     //updating allowed field
@@ -94,10 +110,42 @@ export const deleteBlog = async (req: Request, res: Response) => {
     ///.client.blog.update does soft deletion unlike .client.blog.delete which does hard delete
     await client.blog.update({
       where: { id: String(id) },
-      data: { isDeleted: true },
+      data: {
+        isDeleted: true,
+      },
     });
     res.status(200).json({ message: "Blog moved to trash successfully" });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+///RESTORE FROM BIN
+export const restoreFromBin = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    await client.blog.update({
+      where: { id: String(id) },
+      data: {
+        isDeleted: false,
+      },
+    });
+    res.status(200).json({ message: "Blog restored successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong!" });
+  }
+};
+
+//PERMANENTLY DELETING A blog
+export const eraseBlog = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    await client.blog.delete({
+      where: { id: String(id) },
+    });
+    res.status(200).json({ message: "Blog Permanently deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong!" });
   }
 };

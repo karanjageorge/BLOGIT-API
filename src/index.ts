@@ -15,7 +15,10 @@ import {
   getBlogById,
   updateBlog,
   deleteBlog,
+  restoreFromBin,
+  eraseBlog,
 } from "./controllers/blog.ts";
+import { getUserProfile, updateUserProfile,getUserBlog,getUserTrash} from "./controllers/users.ts";
 import { verifyToken } from "./middlewares/verifyToken.ts";
 import { validateBlogOwnership } from "./middlewares/VerifyOwnership.ts";
 import { validateBlogDetails } from "./middlewares/validateBlogDetails.ts";
@@ -39,20 +42,37 @@ app.post(
   register,
 );
 
+///Routes
 app.post("/auth/login", login);
 app.post("/auth/logout", logout);
 
-//task endpoint
-app.post("/blog", verifyToken, validateBlogDetails, createTask);
+//blog  endpoint
+app.post("/blogs", verifyToken, validateBlogDetails, createTask);
 app.get("/blogs", verifyToken, getAllBlogs);
 app.get("/blogs/:id", verifyToken, getBlogById);
 
 app.patch("/blogs/:id", verifyToken, validateBlogOwnership, updateBlog);
-
+app.patch(
+  "/blogs/restore/:id",
+  verifyToken,
+  validateBlogOwnership,
+  restoreFromBin,
+);
 ///below we use app.patch as we are moving the blog to trash not actually deleting it from the database(soft delete) and one can restore it later by isDeleted:false
 app.patch("/blogs/trash/:id", verifyToken, validateBlogOwnership, deleteBlog);
+
+app.delete("/blogs/:id", verifyToken, validateBlogOwnership, eraseBlog);
+
+///USER PROFILES
+app.get("/profile", verifyToken, getUserProfile);
+app.patch("/profile", verifyToken, checkUserNameAndEmail, updateUserProfile);
+app.get("/profile/blogs", verifyToken, getUserBlog);
+app.get("/profile/trash", verifyToken, getUserTrash);
 
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`App is live at:http://localhost:${PORT}`);
 });
+
+
+

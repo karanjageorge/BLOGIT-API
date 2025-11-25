@@ -28,8 +28,8 @@ export async function checkUserNameAndEmail(
       res.status(400).json({ message: "Username already exists" });
       return;
     }
+    next();
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
-  next();
 }
