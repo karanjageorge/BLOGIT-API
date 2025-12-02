@@ -64,6 +64,17 @@ export const getBlogById = async (req: Request, res: Response) => {
       where: {
         AND: [{ id: String(id) }, { userId }, { isDeleted: false }],
       },
+      include:{
+        user:{
+          select:{
+            id:true,
+            firstName:true,
+            userName:true,
+            lastName:true,
+            emailAddress:true
+          }
+        }
+      }
     });
 
     //validation of the blog

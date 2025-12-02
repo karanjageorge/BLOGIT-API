@@ -13,8 +13,14 @@ export function checkPasswordStrength(
   const { password } = req.body;
   const result = zxcvbn(password);
 
-  if (result.score < 3) {
-    res.status(400).json({ message: "Stronger password required" });
+   if (result.score < 3) {
+    const feedback = result.feedback;
+
+    res.status(400).json({
+      message: "Stronger password required",
+      suggestions: feedback.suggestions,
+      warning: feedback.warning,
+    });
     return;
   }
   next();

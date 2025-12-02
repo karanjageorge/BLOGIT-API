@@ -56,26 +56,29 @@ export const updateUserProfile = async (req: Request, res: Response) => {
 export const getUserBlog = async (req: Request, res: Response) => {
   try {
     const userId = req.user.id;
+
     const blogs = await client.blog.findMany({
       where: {
         AND: [{ userId: userId }, { isDeleted: false }],
       },
       select: {
+        id: true,                 //  ✅ return ID
         blogTitle: true,
         blogSynopsis: true,
         featuredImageUrl: true,
         createdAt: true,
       },
     });
-    if (!blogs) {
-      res.status(404).json({ message: "No blog found for this user" });
-      return;
+
+    if (!blogs || blogs.length === 0) {
+      return res.status(404).json({ message: "No blog found for this user" });
     }
 
     res.status(200).json({
       message: "User blogs retrieved successfully",
       blogs,
     });
+
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
@@ -86,26 +89,24 @@ export const getUserBlog = async (req: Request, res: Response) => {
 export const getUserTrash = async (req:Request,res:Response) =>{
   try {
     const userId = req.user.id;
+
     const deletedBlogs = await client.blog.findMany({
-        where:{
-            AND:[{userId : userId}, {isDeleted:true}]
-        
-        },
-        select:{
-            blogTitle:true,
-            blogSynopsis:true,
-            featuredImageUrl:true,
-            createdAt:true,
-
-        }
+      where:{
+        AND:[{userId : userId}, {isDeleted:true}]
+      },
+      select:{
+        id:true,
+        blogTitle:true,
+        blogSynopsis:true,
+        featuredImageUrl:true,
+        createdAt:true,
+      }
     });
-    if(!deletedBlogs){
-        res.status(404).json({message:"No blogs found"})
-    }
-    
-  } catch (error) {
-        res.status(500).json({ message: "Something went wrong" });
 
-    
+    res.status(200).json({ blogs: deletedBlogs });
+
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
   }
-}
+};
+

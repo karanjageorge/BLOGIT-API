@@ -24,9 +24,15 @@ import { validateBlogOwnership } from "./middlewares/VerifyOwnership.ts";
 import { validateBlogDetails } from "./middlewares/validateBlogDetails.ts";
 import jwt from "jsonwebtoken";
 
+import cors from "cors";///add cors middleware to allow cross origin requests
 const app = express();
 
 dotenv.config();
+
+app.use(cors({ //configure cors middleware
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 app.use(express.json()); //middleware responsible for making express understand the req body
 app.use(cookieParser()); //middleware to enable js to read the cookies
 app.get("/", (_req, res) => {
