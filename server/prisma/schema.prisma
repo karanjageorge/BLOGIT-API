@@ -25,17 +25,17 @@ model User {
 
 model Blog {
   id               String   @id @default(uuid()) @map("BlogID")
-  blogTitle        String   @map("BlogTitle")///the @updatedAt attribute tells prisma to automatically set the LastUpdated = NOW() every time the record is updated in anyway i.e update,delete,restore from bin so no need to add the lastUpdate = NOW() on the functions of the operations
+  blogTitle        String   @map("BlogTitle")
   blogSynopsis     String   @map("BlogSynopsis")
   featuredImageUrl String?  @default("") @map("FeaturedImageUrl")
-  blogContent      String   @map("BlogContent")
+  blogContent      String   @db.Text @map("BlogContent")  // allow unlimited paragraphs
   isDeleted        Boolean  @default(false) @map("IsDeleted")
   createdAt        DateTime @default(now()) @map("CreatedAt")
-  lastUpdated      DateTime @updatedAt @map("LastUpdated") 
+  lastUpdated      DateTime @updatedAt @map("LastUpdated")
 
-  //one to many relationships
   userId String @map("UserId")
   user   User   @relation(fields: [userId], references: [id])
 
   @@map("Blogs")
 }
+
