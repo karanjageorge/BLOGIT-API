@@ -1,14 +1,10 @@
-# BlogIt API & Client README
-
-## 📌 Overview
-
 BlogIt is a full‑stack blogging platform built with a **Node.js + Express + Prisma backend** and a **React + TypeScript + Tailwind CSS frontend**. It provides user authentication, blog creation, editing, deletion, and a clean dashboard UI.
 
 This README summarizes the system setup, project structure, and how to run both the server and client.
 
 ---
 
-## 🚀 Features
+##  Features
 
 ### **Backend (API)**
 
@@ -19,7 +15,7 @@ This README summarizes the system setup, project structure, and how to run both 
 * Secure password hashing with bcrypt
 * Protected routes for authenticated users
 
-### **Frontend (Client)**
+### Frontend (Client)**
 
 * React + TypeScript
 * Tailwind CSS UI
@@ -42,14 +38,14 @@ BlogIt/
 
 # 🛠️ Backend Setup (Server)
 
-## 1️⃣ Install Dependencies
+## 1️ Install Dependencies
 
 ```
 cd server
 npm install
 ```
 
-## 2️⃣ Configure Environment
+## 2️ Configure Environment
 
 Create a `.env` file:
 
@@ -59,14 +55,14 @@ JWT_SECRET="your_jwt_secret_key"
 PORT=5000
 ```
 
-## 3️⃣ Run Prisma
+## 3️ Run Prisma
 
 ```
 npx prisma migrate dev
 npx prisma generate
 ```
 
-## 4️⃣ Start Server
+## 4️ Start Server
 
 ```
 npm run dev
@@ -76,16 +72,16 @@ Server runs on: **[http://localhost:5000](http://localhost:5000)**
 
 ---
 
-# 🖥️ Frontend Setup (Client)
+# 🖥️Frontend Setup (Client)
 
-## 1️⃣ Install Dependencies
+## 1️ Install Dependencies
 
 ```
 cd client
 npm install
 ```
 
-## 2️⃣ Start Vite Dev Server
+## 2️ Start Vite Dev Server
 
 ```
 npm run dev
@@ -109,7 +105,7 @@ Make sure the server is running before using the client.
 
 ---
 
-# 🧪 API Endpoints Summary
+#  API Endpoints Summary
 
 ### **Auth**
 
